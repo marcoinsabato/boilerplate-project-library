@@ -28,9 +28,8 @@ module.exports = function (app) {
     
     .post(async function (req, res){
       let title = req.body.title;
-
       if (!title) {
-        return res.status(400).send('missing required field title');
+        return res.send('missing required field title');
       }
 
       const book = new Book({
@@ -38,6 +37,9 @@ module.exports = function (app) {
       })
 
       const createdBook = await book.save();
+
+      // console.log('created')
+      // console.log(createdBook)
 
       res.json(createdBook);
     })
@@ -53,17 +55,18 @@ module.exports = function (app) {
   app.route('/api/books/:id')
     .get(async function (req, res){
       let bookid = req.params.id;
-
+      // console.log('books/:id' , req.params , bookid)
       try {
         const book = await Book.findById(bookid);
-
+        // console.log(book)
         if (!book) {
-          return res.status(404).send('no book exists');
+          // console.log('BOOK NON TROVATO')
+          return res.send('no book exists');
         }
 
         res.json(book);
       } catch (err) {
-        return res.status(404).send('no book exists');
+        return res.send('no book exists');
       }
     })
     
@@ -72,7 +75,7 @@ module.exports = function (app) {
       let comment = req.body.comment;
 
       if (!comment) {
-        return res.status(400).send('missing required field comment');
+        return res.send('missing required field comment');
       }
 
       const newComment = new Comment({
@@ -83,7 +86,7 @@ module.exports = function (app) {
         const book = await Book.findById(bookid);
 
         if (!book) {
-          return res.status(404).send('no book exists');
+          return res.send('no book exists');
         }
 
         book.comments.push(newComment);
@@ -91,7 +94,7 @@ module.exports = function (app) {
 
         res.json(updatedBook);
       } catch (err) {
-        return res.status(404).send('no book exists');
+        return res.send('no book exists');
       }
     })
     
@@ -100,12 +103,12 @@ module.exports = function (app) {
       try {
         const deletedBook = await Book.findByIdAndDelete(bookid);
         if (!deletedBook) {
-          return res.status(404).send('no book exists');
+          return res.send('no book exists');
         }
 
         res.send('delete successful');
       } catch (err) {
-        return res.status(404).send('no book exists');
+        return res.send('no book exists');
       }
     });
   
