@@ -38,9 +38,6 @@ module.exports = function (app) {
 
       const createdBook = await book.save();
 
-      // console.log('created')
-      // console.log(createdBook)
-
       res.json(createdBook);
     })
     
@@ -55,12 +52,9 @@ module.exports = function (app) {
   app.route('/api/books/:id')
     .get(async function (req, res){
       let bookid = req.params.id;
-      // console.log('books/:id' , req.params , bookid)
       try {
         const book = await Book.findById(bookid);
-        // console.log(book)
         if (!book) {
-          // console.log('BOOK NON TROVATO')
           return res.send('no book exists');
         }
 
@@ -78,9 +72,7 @@ module.exports = function (app) {
         return res.send('missing required field comment');
       }
 
-      const newComment = new Comment({
-        comment: comment
-      })
+
 
       try {
         const book = await Book.findById(bookid);
@@ -89,8 +81,10 @@ module.exports = function (app) {
           return res.send('no book exists');
         }
 
-        book.comments.push(newComment);
-        const updatedBook = await book.save();
+        book.comments.push(comment);
+        await book.save();
+
+        const updatedBook = await Book.findById(bookid);
 
         res.json(updatedBook);
       } catch (err) {

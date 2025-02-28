@@ -1,3 +1,4 @@
+const { type } = require('express/lib/response');
 const mongoose = require('mongoose');
 
 const Schema = new mongoose.Schema({
@@ -5,10 +6,15 @@ const Schema = new mongoose.Schema({
         type: String,
         required: true
     },
-    comments: [
+    // comments: [
+    //     {
+    //         type: mongoose.Schema.Types.ObjectId,
+    //         ref: 'Comment'
+    //     }
+    // ],
+    comments : [
         {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Comment'
+            type: String
         }
     ],
     commentcount: {
